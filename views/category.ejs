@@ -1,0 +1,25 @@
+<%- include("./header.ejs")%>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Categories</title>
+</head>
+<body>
+    <h1>Product Categories</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Category ID</th>
+                <th>Product</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% categories.forEach(category => { %>
+                <tr>
+                    <td><%= category.kategori_id %></td>
+                    <td><%= category.kategori %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+<%- include("./footer.ejs")%>

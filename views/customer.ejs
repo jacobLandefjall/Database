@@ -1,0 +1,28 @@
+<%- include("./header.ejs")%>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>customers</title>
+</head>
+<body>
+    <h1>Our customers</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% customers.forEach(customer => { %>
+                <tr>
+                    <td><%= customer.kund_id %></td>
+                    <td><%= customer.namn %></td>
+                    <td><%= customer.adress %></td>
+                    <td><%= customer.telefon %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+<%- include("./footer.ejs")%>
