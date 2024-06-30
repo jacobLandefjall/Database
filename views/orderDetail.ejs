@@ -1,0 +1,34 @@
+<%- include("./header.ejs")%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Detail</title>
+</head>
+<body>
+    <h1>Order Detail</h1>
+    <% if (error) { %>
+        <div style="color: red;"><%= error %></div>
+    <% } else if (!order) { %>
+        <div style="color: red;">Order not found</div>
+    <% } else { %>
+        <div>Order ID: <%= order.Bestallnings_id %></div>
+        <div>Kund ID: <%= order.kund_id %></div>
+        <div>Datum: <%= order.datum %></div>
+        <div>Faktura: <%= order.faktura %></div>
+        <div>Status: <%= order.order_status %></div>
+
+        <h2>Orderrader</h2>
+        <ul>
+            <% orderRader.forEach(orderRad => { %>
+                <li>
+                    Produkt ID: <%= orderRad.produkt_id %>, 
+                    Antal: <%= orderRad.antal %>
+                </li>
+            <% }); %>
+        </ul>
+    <% } %>
+<%- include("./footer.ejs")%>
+</body>
+</html>
