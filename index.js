@@ -8,7 +8,13 @@ const session = require('express-session');
 
 const { showCategories }= require("./src/category.js");
 const { showCustomers } = require("./src/customer.js");
+const { skapaNyOrder } = require("./src/order.js");
+const { visaAllaOrder } = require("./src/order.js");
+const { orderDetaljer } = require("./src/order.js");
+const { completeOrder } = require('./src/order');
+const { visaOrder } = require('./src/order.js');
 const myOrder  = require("./src/order.js");
+const { visaKundOrder} = myOrder;
 const product = require("./src/product.js");
 const routes = require("./router.js");
 const port = 1337;
@@ -81,19 +87,70 @@ app.get(`/eshop/customer`, async (req, res) => {
 
 app.get(`/eshop/order`, async (req, res) => {
     try {
-        let order = await myOrder.visaKundOrder();
-        console.log(order);
-
-        //orders = Array.isArray(orders) ? orders : [];
-
-        res.render("order", {orders: order});
+        const orders = await visaAllaOrder();
+        for (let order of orders) {
+            await completeOrder([order.Bestallnings_id]);
+        }
+        res.render("order", { orders });
     } catch (error) {
         console.error("Error showing orders", error);
-        //res.render("error", {orders: []});
+        res.render("order", { orders: [] });
     }
 });
 
+app.post(`/eshop/order`, async (req, res) => {
+    const { kundId, datum } = req.body;
+    if (kundId === undefined || isNaN(parseInt(kundId))) {
+        console.error("Invalid kundId", kundId);
+        res.status(400).send("Invalid kundId");
+        return;
+    }
 
+    const produkter = Object.keys(req.body)
+        .filter(key => key.startsWith('antal_'))
+        .map(key => {
+            const produkt_id = key.split('_')[1];
+            const antal = req.body[key];
+            return { produkt_id, antal };
+        });
+
+    try {
+        await skapaNyOrder(kundId, produkter);
+        res.redirect(`/eshop/order?kundId=${kundId}`);
+    } catch (error) {
+        console.error("Error creating order", error);
+    }
+});
+
+app.post('/eshop/order/:orderId', async (req, res) => {
+    const {orderId} = req.params;
+    const {produkt_id, antal} = req.body;
+    try {
+        await myOrder.laggTillOrderrad(orderId, produkt_id, antal);
+        res.status(201).send('Product added to order');
+    } catch (error) {
+        console.error('Error adding product to order', error);
+    }
+});
+
+app.get(`/eshop/order/:orderId`, async (req, res) => {
+    const orderId = req.params.orderId;
+    console.log(`Details for order ${orderId}`);
+    let order = null;
+    let orderRader = [];
+    let error = null;
+
+    try {
+        const result = await orderDetaljer(orderId);
+        order = result.orderInfo;
+        orderRader = result.orderRader;
+    } catch (err) {
+        console.error("Error showing orders", err.message);
+        error = err.message;
+    }
+
+    res.render("orderDetail", { order, orderRader, error });
+});
 
 // Listen for 1337 port.
 app.listen(port, () => {
