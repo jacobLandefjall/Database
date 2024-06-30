@@ -1,4 +1,4 @@
-<%- include("./header.ejs")%>
+<%- include("./header.ejs") %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,15 +7,19 @@
     <title>Orderöversikt</title>
 </head>
 <body>
-    </form>
-    <h1>Order details</h1>
-    <ul>
-        <% orders.forEach(order => { %>
-            <li>Order ID: <%= order.Bestallnings_id %>, Kund ID: <%= order.kund_id %>, Datum: <%= order.datum %>, Status: <%= order.order_status %></li>
-        <% }); %>
-    </ul>
-
+    <h1>Created orders</h1>
+<div>Total orders: <%= orders.length %></div>
+<ul>
+    <% orders.forEach(order => { %>
+        <li>
+            <div>Order ID: <a href="/eshop/order/<%= order.Bestallnings_id %>"><%= order.Bestallnings_id %></a></div>
+            <div>Customer ID: <%= order.kund_id %></div>
+            <div>Number of products: <%= order.antal %></div>
+            <div>Datum: <%= order.datum %></div>
+            <div>Status: <%= order.order_status %></div>
+        </li>
+    <% }); %>
+</ul>
+<%- include("./footer.ejs") %>
 </body>
 </html>
-
-<%- include("./footer.ejs")%>   
