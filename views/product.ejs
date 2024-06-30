@@ -1,61 +1,34 @@
 <%- include("./header.ejs")%>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product overview</title>
+    <title>Order Detail</title>
 </head>
 <body>
-    <h1>Products overview</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Price</th>
-                <th>Name</th>
-                <th>Quantity</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% products.forEach(product => { %>
-                <tr>
-                    <td><%= product.produkt_id %></td>
-                    <td><%= product.pris %></td>
-                    <td><%= product.namn %></td>
-                    <td><%= product.antal %></td>
-    
-                </tr>
-                <td>
-                    <form method="POST" action="/eshop/product/update/<%= product.produkt_id %>">
-                        <input type="text" name="namn" value="<%= product.namn %>" required>
-                        <input type="number" name="pris" value="<%= product.pris %>" required>
-                        <button type="submit">Uppdatera</button>
-                    </form>
-                    <form method="POST" action="/eshop/product/delete/<%= product.produkt_id %>">
-                        <button type=""submit">Ta bort</button>
-                    </form>
-                </td>
+    <h1>Order Detail</h1>
+    <% if (error) { %>
+        <div style="color: red;"><%= error %></div>
+    <% } else if (!order) { %>
+        <div style="color: red;">Order not found</div>
+    <% } else { %>
+        <div>Order ID: <%= order.Bestallnings_id %></div>
+        <div>Kund ID: <%= order.kund_id %></div>
+        <div>Datum: <%= order.datum %></div>
+        <div>Faktura: <%= order.faktura %></div>
+        <div>Status: <%= order.order_status %></div>
+
+        <h2>Orderrader</h2>
+        <ul>
+            <% orderRader.forEach(orderRad => { %>
+                <li>
+                    Produkt ID: <%= orderRad.produkt_id %>, 
+                    Antal: <%= orderRad.antal %>
+                </li>
             <% }); %>
-        </tbody>
-    </table>
-
-    <form method="post" action="/eshop/product">
-        <label for="namn">Product Name</label>
-        <input type="text" id="namn" name="namn">
-        <label for="pris">Price</label>
-        <input type="text" id="pris" name="pris">
-        <input type="submit" value="lägg till produkt!">
-    </form>
-
-    <form method="POST" action="/order">
-        <input type="number" name="kundId" placeholder="Kund ID" min="1" max="5" required>
-        <input type="text" name="produkt_id" placeholder="Produkt ID" required>
-        <input type="number" name="antal" placeholder="Antal" required>
-        <input type="date" name="datum" placeholder="Datum" required>
-        <button type="submit">Skapa Order</button>
-    </form>
-
-
+        </ul>
+    <% } %>
 <%- include("./footer.ejs")%>
+</body>
+</html>
