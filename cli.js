@@ -5,7 +5,8 @@ const { showAbout } = require("./src/about.js");
 const { logNumber } = require("./src/log_number.js");
 const { showShelf } = require("./src/shelf.js");
 const { showProducts } = require("./src/product.js");
-
+const { showOrders, searchOrders }= require("./src/ordercli.js");
+const { showPicklist } = require("./src/plocklist.js");
 
 // Function to start the program.
 async function start() {
@@ -74,6 +75,16 @@ async function start() {
              ${shelf} for product ${productId}`);
         } else if (command[0] === 'product') {
             showProducts(); // Print products
+        } else if (command[0] ==='orders') {
+            showOrders();
+        } else if (command[0] === 'search' && command[1] === 'orders') {
+            console.log('Search for orders:');
+            process.stdin.once('data', (input) => {
+                const filter = input.toString().trim();
+                searchOrders(filter);
+            });
+        } else if (command[0] === 'picklist') {
+            showPicklist();
         } else if (command[0] === 'exit' || command[0] === 'quit') {
             console.log('Exiting program');
             process.exit();
