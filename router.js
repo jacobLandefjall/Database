@@ -94,11 +94,11 @@ router.get("/order", async (req, res) => {
 
 router.post("/order", async (req, res) => {
     try {
-        const { kund_id, produkt_id, antal, namn, pris } = req.body;
+        const { kund_id, produkt_id, antal, namn, pris, datum } = req.body;
         
-        console.log("Creating new order with: ", { kund_id, produkt_id, antal, namn, pris });
+        console.log("Creating new order with: ", { kund_id, produkt_id, antal, namn, pris, datum });
 
-        await order.skapaOrder(kund_id, produkt_id, antal, datum, faktura);
+        await order.skapaNyOrder(kund_id, produkt_id, antal, datum);
     } catch (error) {
         console.error("Error adding order:", error);
         
